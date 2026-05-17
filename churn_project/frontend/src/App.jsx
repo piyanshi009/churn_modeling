@@ -58,7 +58,7 @@ function App() {
     setShowResult(false);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/predict', {
+      const response = await fetch('http://127.0.0.1:8001/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

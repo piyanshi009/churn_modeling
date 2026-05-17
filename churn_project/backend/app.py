@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from utils import predict_churn
 
-app = FastAPI(title="Churn Predictor API")
+app = FastAPI(title="CHURN PREDICTION API")
 
 # CORS
 app.add_middleware(
