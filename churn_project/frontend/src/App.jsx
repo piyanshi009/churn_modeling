@@ -5,17 +5,18 @@ import PredictionForm from './components/PredictionForm';
 import ResultCard from './components/ResultCard';
 
 function App() {
+
   const [formData, setFormData] = useState({
-    CreditScore: 650,
-    Geography: 'France',
-    Gender: 'Male',
-    Age: 35,
-    Tenure: 5,
-    Balance: 75000,
-    NumOfProducts: 2,
-    HasCrCard: 1,
-    IsActiveMember: 1,
-    EstimatedSalary: 60000
+    Geography: "",
+    Gender: "",
+    Age: "",
+    CreditScore: "",
+    Balance: "",
+    EstimatedSalary: "",
+    Tenure: "",
+    NumOfProducts: "",
+    HasCrCard: "",
+    IsActiveMember: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -25,8 +26,10 @@ function App() {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+
     let parsedValue = value;
 
+    // Convert numeric fields properly
     if (
       type === 'number' ||
       type === 'range' ||
@@ -34,7 +37,7 @@ function App() {
       name === 'IsActiveMember' ||
       name === 'NumOfProducts'
     ) {
-      parsedValue = Number(value);
+      parsedValue = value === "" ? "" : Number(value);
     }
 
     setFormData((prev) => ({
@@ -57,8 +60,17 @@ function App() {
     setResult(null);
     setShowResult(false);
 
+    // Validation check
+    for (const key in formData) {
+      if (formData[key] === "") {
+        setError("Please fill all fields.");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
-      const response = await fetch('http://127.0.0.1:8001/predict', {
+      const response = await fetch('http://127.0.0.1:8003/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -74,12 +86,16 @@ function App() {
 
       setResult(data);
       setShowResult(true);
+
     } catch (err) {
+
       setError(
         err.message ||
         'An error occurred while connecting to the server.'
       );
+
       setShowResult(false);
+
     } finally {
       setLoading(false);
     }
@@ -104,22 +120,25 @@ function App() {
             {error && (
               <div className="alert-box error slide-up">
                 <ShieldAlert size={24} />
+
                 <div>
-                  <strong>Connection Error</strong>
+                  <strong>Error</strong>
                   <p>{error}</p>
                 </div>
+
               </div>
             )}
           </>
         ) : (
-          <ResultCard 
-            result={result} 
+          <ResultCard
+            result={result}
             onReset={() => {
               setShowResult(false);
               setResult(null);
-            }} 
+            }}
           />
         )}
+
       </div>
     </div>
   );
