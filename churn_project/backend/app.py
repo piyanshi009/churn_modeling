@@ -6,14 +6,23 @@ from utils import predict_churn
 
 app = FastAPI(title="CHURN PREDICTION API")
 
-# CORS
+# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Home Route
+@app.get("/")
+def home():
+    return {
+        "message": "Churn Prediction API is running successfully"
+    }
+
+# Request Schema
 class ChurnRequest(BaseModel):
     CreditScore: float
     Geography: str
@@ -26,7 +35,7 @@ class ChurnRequest(BaseModel):
     IsActiveMember: int
     EstimatedSalary: float
 
-
+# Prediction Route
 @app.post("/predict")
 def predict(req: ChurnRequest):
 
